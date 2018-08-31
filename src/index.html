@@ -6,6 +6,8 @@
     <link href="css/index.css" rel="stylesheet"/>
     <link href="css/resume.css" rel="stylesheet"/>
     <link href="css/editable-span.css" rel="stylesheet"/>
+    <link href="css/login.css" rel="stylesheet"/>
+    <link href="css/signUp.css" rel="stylesheet"/>
 </head>
 <body>
 <div class="page" id="app">
@@ -13,7 +15,7 @@
         <div class="upper">
             <ul class="actions">
                 <li>
-                    <button class="button">保存</button>
+                    <button class="button" @click="onClickSave">保存</button>
                 </li>
                 <li>
                     <button class="button">分享</button>
@@ -125,6 +127,42 @@
             </section>
         </div>
     </main>
+    <div v-show="loginVisible" class="login">
+        <form class="form">
+            <h2>登录</h2>
+            <button @click="loginVisible = false">关闭</button>
+            <div class="row">
+                <label>邮箱</label>
+                <input type="text">
+            </div>
+            <div class="row">
+                <label>密码</label>
+                <input type="text">
+            </div>
+            <div class="actions">
+                <button>提交</button>
+                <a href="#" @click="signUpVisible = true; loginVisible = false">注册</a>
+            </div>
+        </form>
+    </div>
+    <div v-show="signUpVisible" class="signUp">
+        <form class="form">
+            <h2>注册</h2>
+            <button @click="signUpVisible = false">关闭</button>
+            <div class="row">
+                <label>邮箱</label>
+                <input type="text">
+            </div>
+            <div class="row">
+                <label>密码</label>
+                <input type="text">
+            </div>
+            <div class="actions">
+                <button>提交</button>
+                <a href="#" @click="signUpVisible=false; loginVisible=true;">登录</a>
+            </div>
+        </form>
+    </div>
 </div>
 <script src="../vendors/av-min.js"></script>
 <script src="./js/av.js"></script>
