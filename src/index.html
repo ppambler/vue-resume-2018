@@ -29,11 +29,13 @@
             </ul>
         </div>
         <div class="down">
-            <button class="button" @click="onLogout">登出</button>
+            <!--**？：**为何要有两个！！-->
+            <button class="button" @click="onLogout" v-show="!!currentUser.id">登出</button>
         </div>
     </aside>
     <main>
         <div class="resume">
+            {{currentUser}}
             <section class="profile">
                 <h1>
                     <editable-span :value="resume.name" @edit="onEdit('name', $event)"></editable-span>

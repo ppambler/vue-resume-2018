@@ -4,6 +4,11 @@ let app = new Vue({
         editingName: false,
         loginVisible: false,
         signUpVisible: false,
+        currentUser: {
+            id: undefined,
+            email: '',
+            fuck: 'fuck'
+        },
         resume: {
             name: '姓名',
             gender: '女',
@@ -26,8 +31,11 @@ let app = new Vue({
             this.resume[key] = value
         },
         onLogin(e) {
-            AV.User.logIn(this.login.email, this.login.password).then(function (loggedInUser) {
-                console.log(loggedInUser);
+            AV.User.logIn(this.login.email, this.login.password).then((user) => {
+                console.log(user);
+                this.currentUser.id = user.id
+                this.currentUser.email = user.attributes.email
+                alert('登录成功！')
             }, function (error) {
                 if (error.code === 211) {
                     alert('邮箱不存在！')
@@ -38,7 +46,7 @@ let app = new Vue({
         },
         onLogout(e) {
             AV.User.logOut();
-            alert('注销成功!')
+            alert('登出成功!')
             window.location.reload()
         },
         onSignUp(e) {
@@ -50,10 +58,12 @@ let app = new Vue({
             user.setPassword(this.signUp.password);
             // 设置邮箱
             user.setEmail(this.signUp.email);
-            user.signUp().then(function (loggedInUser) {
-                console.log(loggedInUser);
+            user.signUp().then( (user) => {
+                console.log(user);
                 alert('注册成功！')
-                window.location.reload()
+                this.currentUser.id = user.id
+                this.currentUser.email = user.attributes.email
+                // window.location.reload()
             }, function (error) {
             });
         },
@@ -79,3 +89,20 @@ let app = new Vue({
         }
     }
 });
+let currentUser = AV.User.current()
+console.log(AV.User.current())
+console.log(app.currentUser);
+if(currentUser) {
+    // app.currentUser = currentUser.toJSON()
+    console.log(app.currentUser)
+    console.log(currentUser)
+    console.log(currentUser.objectId);
+    console.log(currentUser.toJSON().objectId);
+    console.log(currentUser.toJSON().email);
+    let id = currentUser.toJSON().objectId;
+    let email = currentUser.toJSON().email;
+    app.currentUser.id = id
+    app.currentUser.email = email
+    console.log(JSON.stringify(currentUser.toJSON()))
+//     Object.assign(app.currentUser,currentUser)
+}
