@@ -5,7 +5,7 @@ let app = new Vue({
         loginVisible: false,
         signUpVisible: false,
         currentUser: {
-            id: undefined,
+            objectId: undefined,
             email: '',
             fuck: 'fuck'
         },
@@ -30,12 +30,18 @@ let app = new Vue({
         onEdit(key, value) {
             this.resume[key] = value
         },
+        hasLogin() {
+            return !!this.currentUser.objectId
+        },
         onLogin(e) {
             AV.User.logIn(this.login.email, this.login.password).then((user) => {
                 console.log(user);
-                this.currentUser.id = user.id
-                this.currentUser.email = user.attributes.email
+                user = user.toJSON()
+                this.currentUser.objectId = user.objectId
+                this.currentUser.email = user.email
+                this.loginVisible = false
                 alert('登录成功！')
+                window.location.reload()
             }, function (error) {
                 if (error.code === 211) {
                     alert('邮箱不存在！')
@@ -61,10 +67,12 @@ let app = new Vue({
             user.signUp().then( (user) => {
                 console.log(user);
                 alert('注册成功！')
-                this.currentUser.id = user.id
-                this.currentUser.email = user.attributes.email
-                // window.location.reload()
+                user = user.toJSON()
+                this.currentUser.objectId = user.objectId
+                this.currentUser.email = user.email;
+                this.signUpVisible = false
             }, function (error) {
+                alert(error.rawMessage)
             });
         },
         onClickSave(){
@@ -77,32 +85,33 @@ let app = new Vue({
             }
         },
         saveResume() {
-            let {id} = AV.User.current()
+            let {objectId} = AV.User.current().toJSON()
             // 第一个参数是 className，第二个参数是 objectId
-            var user = AV.Object.createWithoutData('User', id);
+            var user = AV.Object.createWithoutData('User', objectId);
             // 修改属性
             user.set('resume', this.resume);
             // 保存到云端
             user.save().then(()=>{
                 alert('保存成功！')
+            },() => {
+                alert('保存失败！')
+            });
+        },
+        getResume() {
+            var query = new AV.Query('User');
+            query.get(this.currentUser.objectId).then((user) => {
+                // 成功获得实例
+                // user 就是 id 为 57328ca079bc44005c2472d0 的 User 对象实例
+                let resume = user.toJSON().resume
+                this.resume = resume
+            }, (error) => {
+                // 异常处理
             });
         }
     }
 });
 let currentUser = AV.User.current()
-console.log(AV.User.current())
-console.log(app.currentUser);
 if(currentUser) {
-    // app.currentUser = currentUser.toJSON()
-    console.log(app.currentUser)
-    console.log(currentUser)
-    console.log(currentUser.objectId);
-    console.log(currentUser.toJSON().objectId);
-    console.log(currentUser.toJSON().email);
-    let id = currentUser.toJSON().objectId;
-    let email = currentUser.toJSON().email;
-    app.currentUser.id = id
-    app.currentUser.email = email
-    console.log(JSON.stringify(currentUser.toJSON()))
-//     Object.assign(app.currentUser,currentUser)
+    app.currentUser = currentUser.toJSON()
+    app.getResume()
 }

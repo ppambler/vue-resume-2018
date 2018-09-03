@@ -30,7 +30,7 @@
         </div>
         <div class="down">
             <!--**？：**为何要有两个！！-->
-            <button class="button" @click="onLogout" v-show="!!currentUser.id">登出</button>
+            <button class="button" @click="onLogout" v-show="hasLogin()">登出</button>
         </div>
     </aside>
     <main>
