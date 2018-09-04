@@ -47,6 +47,9 @@ div[v-cloak] {display: none;}
     margin-right: 6px;
     cursor: pointer;
 }
-.skills > ul > li .add {
+.projects > ol > li .remove {
+    cursor: pointer;
+}
+.skills > ul > li .add, .projects > ol > li .add {
     cursor: pointer;
 }
