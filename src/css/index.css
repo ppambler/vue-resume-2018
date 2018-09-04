@@ -36,4 +36,17 @@ div[v-cloak] {display: none;}
 }
 .button {
     padding: 3px 10px;
-} 
+}
+.skills > ul > li {
+    position: relative;
+}
+.skills > ul > li .remove {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-right: 6px;
+    cursor: pointer;
+}
+.skills > ul > li .add {
+    cursor: pointer;
+}

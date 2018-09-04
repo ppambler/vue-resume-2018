@@ -15,7 +15,13 @@ let app = new Vue({
             birthday: '1990年1月',
             jobTitle: '前端工程师',
             phone: '138111111111',
-            email: 'example@example.com'
+            email: 'example@example.com',
+            skills: [
+                {name: '请填写技能名称', description: '请填写技能描述'},
+                {name: '请填写技能名称', description: '请填写技能描述'},
+                {name: '请填写技能名称', description: '请填写技能描述'},
+                {name: '请填写技能名称', description: '请填写技能描述'}
+            ]
         },
         login: {
             email: '',
@@ -28,7 +34,18 @@ let app = new Vue({
     },
     methods: {
         onEdit(key, value) {
-            this.resume[key] = value
+            let regex = /\[(\d+)\]/g
+            key = key.replace(regex,(match, number) => `.${number}`)
+            //key = skills.0.name
+            keys = key.split('.')
+            let result = this.resume
+            for (let i = 0; i < keys.length; i++) {
+                if(i === keys.length - 1) {
+                    result[keys[i]] = value
+                } else {
+                    result = result[keys[i]]
+                }
+            }
         },
         hasLogin() {
             return !!this.currentUser.objectId
@@ -90,6 +107,7 @@ let app = new Vue({
             var user = AV.Object.createWithoutData('User', objectId);
             // 修改属性
             user.set('resume', this.resume);
+            console.log(this.resume)
             // 保存到云端
             user.save().then(()=>{
                 alert('保存成功！')
@@ -103,10 +121,19 @@ let app = new Vue({
                 // 成功获得实例
                 // user 就是 id 为 57328ca079bc44005c2472d0 的 User 对象实例
                 let resume = user.toJSON().resume
-                this.resume = resume
+                Object.assign(this.resume, resume)
             }, (error) => {
                 // 异常处理
             });
+        },
+        addSkill() {
+            this.resume.skills.push({
+                name: '请填写技能名称',
+                description: '请填写技能描述'
+            })
+        },
+        removeSkill(index) {
+            this.resume.skills.splice(index, 1)
         }
     }
 });
