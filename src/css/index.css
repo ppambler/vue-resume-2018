@@ -53,3 +53,12 @@ div[v-cloak] {display: none;}
 .skills > ul > li .add, .projects > ol > li .add {
     cursor: pointer;
 }
+
+/*preview-start*/
+.exitPreview {
+    position: fixed;
+    left: 20px;
+    top: 20px;
+}
+/*preview-end*/
+
